@@ -6,6 +6,8 @@ use crate::config;
 #[derive(Serialize, Deserialize)]
 pub struct Config {
     pub dataset: config::Dataset,
+    pub optimizer: config::Optimizer,
+    pub initializer: config::Initializer,
 }
 
 impl Config {

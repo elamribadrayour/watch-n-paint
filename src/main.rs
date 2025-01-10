@@ -1,33 +1,28 @@
-use anyhow::Result;
-use config::Config;
-use dataset::{Dataset, Item};
-
+mod nn;
 mod config;
 mod dataset;
+mod optimizer;
+mod initializer;
+
+use nn::Neuron;
+use anyhow::Result;
+use config::Config;
+use dataset::Dataset;
+
+
 
 fn main() -> Result<()> {
     let config = Config::new("Config.json")?;
 
     let dataset = Dataset::new(&config.dataset)?;
-    println!(
-        "size: {}, width: {} -- height: {}",
-        dataset.items.len(),
-        dataset.width,
-        dataset.height
-    );
+    let mut optimizer = optimizer::get_optimizer(&config.optimizer)?;
+    let mut initializer = initializer::get_initializer(&config.initializer)?;
 
-    let item = dataset.items.first().unwrap();
-    let value = item.value(dataset.width, dataset.height)?;
-    println!("first item path {}", item.file_path);
-    println!("first item value length {:?}", value.len());
 
-    let item = Item::fromvalue(value);
-    let image = item.image(dataset.width, dataset.height)?;
-    item.save(dataset.width, dataset.height)?;
-    println!(
-        "rebuild image dims {:?}x{:?}",
-        image.width(),
-        image.height()
-    );
+    let size = 10;
+    let inputs = initializer.initialize(10);
+    let neuron = Neuron::new(size, &mut *initializer);
+    let output = neuron.forward(&inputs)?;
+    println!("{:?}", output);
     Ok(())
 }

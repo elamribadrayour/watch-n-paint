@@ -3,5 +3,13 @@
         "width": 500,
         "height": 500,
         "path": "data/the-wire"
+    },
+    "optimizer": {
+        "name": "sgd",
+        "lr": 0.01
+    },
+    "initializer": {
+        "name": "zero-centered",
+        "radius": 1
     }
 }
